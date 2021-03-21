@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ratingsapi-deploy
+  namespace: aks-engine-workshop-qa
+spec:
+  selector:
+      matchLabels:
+        app: ratingsapi-pod
+  replicas: 1
+  template:
+      metadata:
+        labels:
+            app: ratingsapi-pod
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/scheme: "http"
+      spec:
+        containers:
+        - name: ratingsapi-app
+          image: aksengnacr.azurecr.io/ratings-api:v1.0.0
+          imagePullPolicy: IfNotPresent
+          readinessProbe:
+            httpGet:
+              port: 3000
+              path: /healthz
+          livenessProbe:
+            httpGet:
+              port: 3000
+              path: /healthz
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+          env:          
+          - name: MONGODB_URI
+            valueFrom:
+                secretKeyRef:
+                  key: MONGOCONNECTION
+                  name: aks-engine-mongo-secret
+          ports:
+          - containerPort: 3000
+        imagePullSecrets:
+        - name: aks-engine-acr-secret
+        nodeSelector:
+          agentpool: akeapipool

@@ -1,0 +1,96 @@
+aks-engine deploy --azure-env AzurePublicCloud \
+    -p aks-engine-workshop-cluster \
+    -g aks-engine-workshop-rg \
+    -l eastus \
+    -m ./aks-engine-config.json \
+    --auto-suffix
+
+aks-engine generate \
+-m ./aks-engine-config.json \
+--client-id "c21eddb9-fc66-4316-bca3-2a9a89505df5" \
+--client-secret "46UI83MVCiX~T-15Wk4wYsCaF7vubEc~ED" \
+--output-directory ./Output \
+--set masterProfile.dnsPrefix=aks-engine-workshop-cluster \
+--set masterProfile.vnetSubnetId="/subscriptions/6bdcc705-8db6-4029-953a-e749070e6db6/resourceGroups/aks-engine-workshop-rg/providers/Microsoft.Network/virtualNetworks/aks-engine-workshop-vnet/subnets/aks-engine-workshop-subnet" \
+--set agentPoolProfiles[0].vnetSubnetId="/subscriptions/6bdcc705-8db6-4029-953a-e749070e6db6/resourceGroups/aks-engine-workshop-rg/providers/Microsoft.Network/virtualNetworks/aks-engine-workshop-vnet/subnets/aks-engine-workshop-subnet" \
+--set agentPoolProfiles[1].vnetSubnetId="/subscriptions/6bdcc705-8db6-4029-953a-e749070e6db6/resourceGroups/aks-engine-workshop-rg/providers/Microsoft.Network/virtualNetworks/aks-engine-workshop-vnet/subnets/aks-engine-workshop-subnet" \
+--set linuxProfile.ssh.publicKeys[0].keyData=$(cat /Users/monojitd/.ssh/id_rsa.pub)
+
+az deployment group create --name "aks-engine-workshop-cluster-deploy" \
+--resource-group "aks-engine-workshop-rg" \
+--template-file "./Output/azuredeploy.json" \
+--parameters "./Output/azuredeploy.parameters.json"
+
+============
+
+$ClientAppId="232b1cf4-6b09-4f21-8143-0b95592f486c"
+$ClientAppSecret="DZIzTDE-3qwXDeFH9dr.q6xDFc.-ZUNY4P"
+
+az role assignment create --assignee $ClientAppId \
+--role "Contributor" \
+--scope "/subscriptions/6bdcc705-8db6-4029-953a-e749070e6db6/resourceGroups/aks-engine-workshop-rg"
+
+aks-engine generate \
+-m ./aks-engine-config.json \
+--client-id $ClientAppId \
+--client-secret $ClientAppSecret \
+--set masterProfile.dnsPrefix=aks-engine-workshop-cluster
+
+az deployment group create --name "aks-engine-workshop-cluster-deploy" \
+--resource-group "aks-engine-workshop-rg" \
+--template-file "./_output/aks-engine-workshop-cluster/azuredeploy.json" \
+--parameters "./_output/aks-engine-workshop-cluster/azuredeploy.parameters.json"
+
+aks-engine deploy --azure-env "AzurePublicCloud" \
+-m ./aks-engine-config.json \
+-g aks-engine-workshop-rg -l eastus \
+--client-id "c21eddb9-fc66-4316-bca3-2a9a89505df5" \
+--client-secret "46UI83MVCiX~T-15Wk4wYsCaF7vubEc~ED" \
+--set masterProfile.dnsPrefix=aks-engine-workshop-cluster \
+--auto-suffix
+
+aks-engine update --azure-env AzurePublicCloud \
+-m ./Output/apimodel.json \
+-g aks-engine-workshop-rg -l eastus \
+--node-pool syspool1
+
+aks-engine update --azure-env AzurePublicCloud \
+-m ./Output/apimodel.json \
+-g aks-engine-workshop-rg -l eastus \
+--node-pool userpool1
+
+ServerAppId: 3adf37ca-d914-43e9-9b24-8c081e0b3a08
+ClientAppId: 70dba699-0fba-4c1d-805e-213acea0a63e
+TenantId: 3851f269-b22b-4de6-97d6-aa9fe60fe301
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+
+helm repo update
+
+helm install aks-engine-nginx-ingress ingress-nginx/ingress-nginx \
+--namespace aks-engine-ing-ns \
+-f ./Common/internal-ingress.yaml
+
+k create secret tls aks-engine-tls-secret -n aks-engine-workshop-dev --cert="<path>/star_internal_wkshpdev_com.pem" --key="<path>/star.internal.wkshpdev.com.key"
+k create secret tls aks-engine-tls-secret -n aks-engine-workshop-qa --cert="<path>/star_internal_wkshpdev_com.pem" --key="<path>/star.internal.wkshpdev.com.key"
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm search repo bitnami
+helm install ratingsdb bitnami/mongodb --namespace db --set auth.username=ratings-user,auth.password=ratings-pwd,auth.database=ratingsdb --set nodeSelector.agentpool=akesyspool,defaultBackend.nodeSelector.agentpool=akesyspool
+k create secret generic aks-engine-mongo-secret --namespace aks-engine-workshop-dev --from-literal=MONGOCONNECTION="mongodb://ratings-user:ratings-pwd@ratingsdb-mongodb.db:27017/ratingsdb"
+k create secret generic aks-engine-mongo-secret --namespace aks-engine-workshop-qa --from-literal=MONGOCONNECTION="mongodb://ratings-user:ratings-pwd@ratingsdb-mongodb.db:27017/ratingsdb"
+
+az acr login -n aksengnacr
+k create secret docker-registry aks-engine-acr-secret -n aks-engine-workshop-dev --docker-server=aksengnacr.azurecr.io --docker-username=aksengnacr --docker-password=tfVbeAu0Ec1bzQA4Vmam+tY0AS8WBSma
+k create secret docker-registry aks-engine-acr-secret -n aks-engine-workshop-qa --docker-server=aksengnacr.azurecr.io --docker-username=aksengnacr --docker-password=tfVbeAu0Ec1bzQA4Vmam+tY0AS8WBSma
+az acr build -r aksengnacr https://github.com/MicrosoftDocs/mslearn-aks-workshop-ratings-api -t aksengnacr.azurecr.io/ratings-api:v1.0.0
+az acr build -r aksengnacr https://github.com/MicrosoftDocs/mslearn-aks-workshop-ratings-web -t aksengnacr.azurecr.io/ratings-web:v1.0.0
+
+az container create \
+    -g ash-workshop-rg \
+    -n loadtest \
+    --cpu 4 \
+    --memory 1 \
+    --image azch/artillery \
+    --restart-policy Never \
+    --command-line "artillery quick -r 500 -d 120 http://10.11.143.44.nip.io/api/loadtest"

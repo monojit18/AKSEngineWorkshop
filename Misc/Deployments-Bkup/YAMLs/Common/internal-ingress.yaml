@@ -1,0 +1,28 @@
+controller:
+  replicaCount: 2
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "10254"
+  metrics:
+    enabled: "true"
+  nodeSelector:    
+   agentpool: syspool1
+  defaultBackend:
+    nodeSelector:      
+      agentpool: syspool1
+  service:
+    loadBalancerIP: 193.0.0.200 #private IP
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+
+
+
+
+
+
+
+
+
+
+
+

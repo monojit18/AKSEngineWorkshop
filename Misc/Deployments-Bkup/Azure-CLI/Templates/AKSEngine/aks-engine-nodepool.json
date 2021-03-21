@@ -1,0 +1,9 @@
+{
+  "name": "akeiotpool",
+  "count": 2,
+  "vmSize": "Standard_DS2_v2",
+  "osType": "Linux",
+  "availabilityProfile": "VirtualMachineScaleSets",
+  "storageProfile": "ManagedDisks",
+  "vnetSubnetID": "/subscriptions/6bdcc705-8db6-4029-953a-e749070e6db6/resourceGroups/aks-engine-workshop-rg/providers/Microsoft.Network/virtualNetworks/aks-engine-workshop-vnet/subnets/aks-engine-workshop-subnet"
+}
