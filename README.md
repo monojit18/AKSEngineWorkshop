@@ -106,7 +106,7 @@ Before getting into actual action, couple of minutes to understand the folder st
 
 ## Anatomy of the Approach
 
-![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step](/Users/monojitd/Materials/Projects/AKSProjects/AKSEngineWorkshop/Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step.png)
+![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step](./Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step.png)
 
 ### Step-By-Step
 
