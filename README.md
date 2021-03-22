@@ -106,22 +106,22 @@ Before getting into actual action, couple of minutes to understand the folder st
 
 ## Anatomy of the Approach
 
-![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step](./Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step.png)
+![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step](/Users/monojitd/Materials/Projects/AKSProjects/AKSEngineWorkshop/Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step.png)
 
 ### Step-By-Step
 
-3. **Create** a *Management Resource Group*, say, **aks-mgmt-rg**
+1. **Create** a *Management Resource Group*, say, **aks-mgmt-rg**
 
 2. **Create** VNet and SubNet for Jump Server VM
 
-5. **Create** a Jump Server VM - preferred is Windows VM so that all visualisation tools like **Lens** etc. can be used to view the cluster status at runtime. The one used for this workshop was - 
+3. **Create** a Jump Server VM - preferred is Windows VM so that all visualisation tools like **Lens** etc. can be used to view the cluster status at runtime. The one used for this workshop was - 
 
    - OS - **Windows Server 2019 DC - v1809**
    - Size  - **Standard DS2 v2 (2 vcpus, 7 GiB memory)**
 
-6. **RDP** to the windows VM
+4. **RDP** to the windows VM
 
-7. **Install** following tools for creation and management of the cluster and its associated resources
+5. **Install** following tools for creation and management of the cluster and its associated resources
 
    1. **Chocolatey**
 
@@ -187,14 +187,14 @@ Before getting into actual action, couple of minutes to understand the folder st
       # This workshop will use a different techniqe so installation of Docker is not needed
       ```
 
-8. **Docker Private Registry**
+6. **Docker Private Registry**
 
    - User(s) might want to use *Private Docker registry* to store their scanned, cleaned images and distribute them through the K8s cluster
    - While *Azure Container Registry* is a natural choice, but that means it is an outbound call to *Azure Public Cloud* from the K8s cluster on Azure
    - Preparing a *Docker Registry* is easy - https://docs.docker.com/registry/deploying/
    - This can be setup on the same Jump Server Or on any other machine
 
-9. **Clone** the repo — https://github.com/monojit18/AKSEngineWorkshop.git into your local folder somewhere on the VM. Open and browse the files in VS Code editor and have a quick look; check the folder structure as described in the section [above](#deployments)
+7. **Clone** the repo — https://github.com/monojit18/AKSEngineWorkshop.git into your local folder somewhere on the VM. Open and browse the files in VS Code editor and have a quick look; check the folder structure as described in the section [above](#deployments)
 
 8. The **Jump Server** is now ready to be used for subsequent deployments
 
@@ -202,9 +202,9 @@ Before getting into actual action, couple of minutes to understand the folder st
 
 9. **Open** PowerShell Core on the VM. Set cloud option to *Azure Public Cloud*
 
-   ```bash
-   az cloud set -n "AzureCloud"
-   ```
+    ```bash
+    az cloud set -n "AzureCloud"
+    ```
 
 10. **Login** to Azure Tenant
 
@@ -393,6 +393,9 @@ Before getting into actual action, couple of minutes to understand the folder st
         ./aksengine-cluster-nodepool.ps1 --mode "add" --resourceGroup "aks-engine-workshop-rg"
         --location "eastus" --clusterName "aks-engine-workshop-cluster" --keyVaultName "aks-engine-workshop-kv" --subscriptionId "<subscription_Id>" --nodePoolConfigFileName "aks-engine-nodepool" 
         --nodepoolName "<nodepool_name>" --baseFolderPath "<base_Folder_Path>"
+        ```
+      ```
+      
       ```
       
     - ***Note***
@@ -549,7 +552,7 @@ Before getting into actual action, couple of minutes to understand the folder st
           - **subscriptionId** - The *SubscriptionId* of the logged-in user/service principal. This workshop used a Microsoft userid to Login and run through this - *<ms-alias>@microsoft.com*
 
 
-          
+​          
 
 
 ### References
