@@ -373,7 +373,7 @@ Before getting into actual action, couple of minutes to understand the folder st
             - **Multi-Site Listener** - This would allow users to build a multi-tenant architecture
             - **End-to-End SSL** - Supporting SSL termination at the Nginx Ingress controller inside the cluster
 
-        - ![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-57](./AKSProjects/AKSEngineWorkshop/Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-57.png)
+        - ![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-57](./Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-57.png)
 
           
 
