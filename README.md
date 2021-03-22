@@ -48,7 +48,7 @@ The purpose of this workshop would be to:
 
 ## Reference Architecture
 
-![ASH-Ref-Architecture-v1.0-Stack-Hub-Ref-Arch](./Assets/ASH-Ref-Architecture-v1.0-Stack-Hub-Ref-Arch.png)
+![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Ref-Arch](./Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Ref-Arch.png)
 
 ## Action
 
@@ -106,7 +106,7 @@ Before getting into actual action, couple of minutes to understand the folder st
 
 ## Anatomy of the Approach
 
-
+![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step](./Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step.png)
 
 ### Step-By-Step
 
@@ -194,15 +194,17 @@ Before getting into actual action, couple of minutes to understand the folder st
    - Preparing a *Docker Registry* is easy - https://docs.docker.com/registry/deploying/
    - This can be setup on the same Jump Server Or on any other machine
 
-9. **Clone** the repo — (TBD) into your local folder somewhere on the VM. Open and browse the files in VS Code editor and have a quick look; check the folder structure as described in the section [above](#deployments)
+9. **Clone** the repo — https://github.com/monojit18/AKSEngineWorkshop.git into your local folder somewhere on the VM. Open and browse the files in VS Code editor and have a quick look; check the folder structure as described in the section [above](#deployments)
 
-10. The **Jump Server** is now ready to be used for subsequent deployments
+8. The **Jump Server** is now ready to be used for subsequent deployments
 
-11. **Open** PowerShell Core on the VM. Set cloud option to *Azure Public Cloud*
+   ![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-1](./Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-1.png)
 
-    ```bash
-    az cloud set -n "AzureCloud"
-    ```
+9. **Open** PowerShell Core on the VM. Set cloud option to *Azure Public Cloud*
+
+   ```bash
+   az cloud set -n "AzureCloud"
+   ```
 
 10. **Login** to Azure Tenant
 
@@ -217,6 +219,8 @@ Before getting into actual action, couple of minutes to understand the folder st
     
 
 11. **Prepare** *Infrastructure*
+
+    ![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-234](./Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-234.png)
 
     - Run ***Deployments/Azure-CLI/Setup/aksengine-cluster-preconfig.ps1***
       - ***Example***
@@ -269,6 +273,8 @@ Before getting into actual action, couple of minutes to understand the folder st
             3. Assign **Owner** role to the above Service Principal on the ***Subscription***
 
 12. **Setup** K8s cluster on Azure Infrastructure
+
+    ![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-5](./Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-5.png)
 
     - Prepare for **RBAC**
 
@@ -335,6 +341,8 @@ Before getting into actual action, couple of minutes to understand the folder st
 
 14. **Configure** K8s cluster post creation
 
+    ![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-56](./Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-56.png)
+
     - The K8s cluster is still with Cluster Admin group members
 
     - Run ***Deployments/Azure-CLI/Setup/aksengine-cluster-postconfig.ps1***
@@ -364,6 +372,10 @@ Before getting into actual action, couple of minutes to understand the folder st
           - **Application Gateway** - L7 External Load Balancer in front of Nginx Ingress (ILB). This is deployed with-
             - **Multi-Site Listener** - This would allow users to build a multi-tenant architecture
             - **End-to-End SSL** - Supporting SSL termination at the Nginx Ingress controller inside the cluster
+
+        - ![AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-57](./AKSProjects/AKSEngineWorkshop/Assets/AKS-Engine-Ref-Architecture-v1.0-ASK-Engine-Step-By-Step-57.png)
+
+          
 
 15. **Add** more Node pools to the Cluster
 
